@@ -9,7 +9,7 @@ def do_pack():
     file_date = strftime("%Y%m%d%H%M%S")
     file_name = 'web_static_' + file_date + '.tgz'
     try:
-        local('mkdir -p version')
+        local('mkdir -p versions')
         local('tar -czvf versions/{} web_static/'.format(file_name))
 
         return 'versions/{}'.format(file_name)
