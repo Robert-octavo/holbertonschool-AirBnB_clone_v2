@@ -1,6 +1,6 @@
 # script that sets up your web servers for the deployment of web_static
 
-exec { 'update'
+exec {'update':
   provider => shell,
   command  => 'sudo apt-get update',
 }
