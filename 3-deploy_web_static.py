@@ -5,6 +5,7 @@ from time import strftime
 
 
 env.hosts = ['18.215.143.86', '50.19.37.76']
+env.user = 'ubuntu'
 
 
 def do_pack():
@@ -19,6 +20,7 @@ def do_pack():
         return 'versions/{}'.format(file_name)
     except Exception as e:
         return None
+
 
 def do_deploy(archive_path):
     """Fabric script that distributes an archive to your web servers"""
@@ -46,9 +48,10 @@ def do_deploy(archive_path):
     except Exception as e:
         return False
 
+
 def deploy():
-    """Fabric script that creates and distributes an archive to your web servers,
-    using the function deploy"""
+    """Fabric script that creates and distributes an archive to your
+    web servers, using the function deploy"""
 
     file_path = do_pack()
     if not file_path:
