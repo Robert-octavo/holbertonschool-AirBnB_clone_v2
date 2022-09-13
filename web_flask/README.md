@@ -43,5 +43,5 @@ At the end of this project, you are expected to be able to explain to anyone, wi
 * Current screenshots have been done on Chrome 56.0.2924.87.
 * No cross browsers
 
-![web framework]()
+![web framework](https://github.com/Robert-octavo/holbertonschool-AirBnB_clone_v2/blob/main/hbnb_step3.png)
 
