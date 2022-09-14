@@ -7,13 +7,16 @@ from sqlalchemy.orm import relationship
 from sqlalchemy import Column, String
 from os import getenv
 
+STORAGE = getenv("HBNB_TYPE_STORAGE")
 
-class State(BaseModel, Base):
+
+class State(BaseModel, Base if (STORAGE == "db") else object):
     """ State class """
-    __tablename__ = 'states'
+
     if getenv("HBNB_TYPE_STORAGE") == "db":
+        __tablename__ = 'states'
         name = Column(String(128), nullable=False)
-        # cities = relationship("City", cascade="all, delete", backref="state")
+        cities = relationship("City", cascade="all, delete", backref="state")
 
     else:
         name = ""
