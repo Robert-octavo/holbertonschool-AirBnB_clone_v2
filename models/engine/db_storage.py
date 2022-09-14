@@ -11,11 +11,6 @@ from models.review import Review
 from models.state import State
 from models.user import User
 
-USER = getenv('HBNB_MYSQL_USER')
-PASS = getenv('HBNB_MYSQL_PWD')
-HOST = getenv('HBNB_MYSQL_HOST')
-DB = getenv('HBNB_MYSQL_DB')
-
 
 class DBStorage:
     """Class DBStorage"""
@@ -24,24 +19,27 @@ class DBStorage:
 
     def __init__(self):
         """Instantiates a new database"""
-        self.__engine = create_engine('mysql+mysqldb://{}:{}@{}/{}'.format(
-            USER, PASS, HOST, DB), pool_pre_ping=True)
+        self.__engine = create_engine(
+            "mysql+mysqldb://{}:{}@{}/{}".format(
+                getenv('HBNB_MYSQL_USER'), getenv('HBNB_MYSQL_PWD'),
+                getenv('HBNB_MYSQL_HOST'), getenv('HBNB_MYSQL_DB')),
+            pool_pre_ping=True)
 
         if getenv('HBNB_ENV') == "test":
             Base.metadata.drop_all(self.__engine)
 
     def all(self, cls=None):
         """Return a dictionary all cls in DB o all obj un DB"""
-        dict_return = {}
+        objects = {}
         if cls:
             for obj in self.__session.query(cls).all():
-                dict_return[obj.to_dict()['__class__'] + '.' + obj.id] = obj
+                objects[obj.to_dict()['__class__'] + '.' + obj.id] = obj
         else:
             classes = [State, Place, User, City, Review, Amenity]
             for every_class in classes:
                 for ob in self.__session.query(every_class).all():
-                    dict_return[ob.to_dict()['__class__'] + '.' + ob.id] = ob
-        return dict_return
+                    objects[ob.to_dict()['__class__'] + '.' + ob.id] = ob
+        return objects
 
     def new(self, obj):
         """add the object to the current database session"""
