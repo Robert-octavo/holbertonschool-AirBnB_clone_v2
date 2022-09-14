@@ -113,33 +113,40 @@ class HBNBCommand(cmd.Cmd):
         """ Overrides the emptyline method of CMD """
         pass
 
-    def do_create(self, args):
-        """ Create an object of any class """
+    def split_args(self, line):
+        """ Split arguments by spaces """
+        list = []
+        for arg in line.split(" "):
+            list.append(arg)
+        return list
 
+    def do_create(self, args):
+        """ Create an object of any class"""
         if not args:
             print("** class name missing **")
             return
-
-        args = args.split()
-
-        if args[0] not in HBNBCommand.classes:
+        array_args = self.split_args(args)
+        if array_args[0] not in HBNBCommand.classes:
             print("** class doesn't exist **")
             return
-
-        parameters = {}
-        for parameter in args[1:]:
-            args_splitted = parameter.split("=")
-
-            parameters[args_splitted[0]] = args_splitted[1].replace(
-                "_", " ").strip('"')
-
-        new_instance = HBNBCommand.classes[args[0]]()
-
-        for key_inside, value_inside in parameters.items():
-            setattr(new_instance, key_inside, value_inside)
-
-        new_instance.save()
+        array_kwargs = array_args[1:]
+        dict_kwargs = dict()
+        for kwarg in array_kwargs:
+            key, value = kwarg.split("=")
+            if value[0] == "\"":
+                value = str(value.strip('"'))
+                value = value.replace("_", " ")
+            elif "." in value:
+                value = float(value)
+            else:
+                value = int(value)
+            dict_kwargs[key] = value
+        new_instance = HBNBCommand.classes[array_args[0]]()
+        for key, value in dict_kwargs.items():
+            new_instance.__dict__[key] = value
         print(new_instance.id)
+        storage.new(new_instance)
+        storage.save()
 
     def help_create(self):
         """ Help information for the create method """
@@ -221,12 +228,11 @@ class HBNBCommand(cmd.Cmd):
             if args not in HBNBCommand.classes:
                 print("** class doesn't exist **")
                 return
-            for _, v in storage.all(HBNBCommand.classes[args]).items():
-                # del v.__dict__['_sa_instance_state']
+            for k, v in storage.all(HBNBCommand.classes[args]).items():
+                """del v.__dict__['_sa_instance_state']"""
                 print_list.append(str(v))
         else:
-            for _, v in storage.all().items():
-                # del v.__dict__['_sa_instance_state']
+            for v in storage.all():
                 print_list.append(str(v))
 
         print(print_list)
@@ -335,7 +341,6 @@ class HBNBCommand(cmd.Cmd):
         """ Help information for the update class """
         print("Updates an object with new information")
         print("Usage: update <className> <id> <attName> <attVal>\n")
-
 
 if __name__ == "__main__":
     HBNBCommand().cmdloop()
