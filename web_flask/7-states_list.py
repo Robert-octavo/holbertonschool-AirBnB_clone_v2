@@ -11,7 +11,7 @@ app = Flask(__name__)
 @app.route('/states_list', strict_slashes=False)
 def state_route():
     """Display the states in order”"""
-    states = storage.all('State').values()
+    states = storage.all(State).values()
     t_name = 'States'
     return render_template('7-states_list.html', states=states, t_name=t_name)
 
