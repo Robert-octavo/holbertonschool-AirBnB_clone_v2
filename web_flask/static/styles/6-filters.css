@@ -43,6 +43,10 @@
 
 	overflow-y: scroll;
 	max-height: 300px;
+
+	position: relative;
+	z-index: 1;
+
 }
 
 .locations:hover .popover {
